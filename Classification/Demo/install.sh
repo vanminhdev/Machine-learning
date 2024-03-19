@@ -1,0 +1,1 @@
+./.venv/Scripts/pip3.exe install -r requirements.txt
