@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Đọc dữ liệu từ file CSV (đảm bảo thay đường dẫn đúng vào 'path_to_data')
-path_to_data = "path_to_kddcup99_data.csv"
+path_to_data = "kddcup99_data.csv"
 data = pd.read_csv(path_to_data)
 
 # Xem thông tin cơ bản của dữ liệu
@@ -14,8 +14,8 @@ print("Shape of the data:", data.shape)
 print("Columns:", data.columns)
 
 # Phân chia dữ liệu thành features và target
-X = data.drop('target', axis=1)
-y = data['target']
+X = data.drop('label', axis=1)
+y = data['label']
 
 # Mã hóa các biến phân loại
 le = LabelEncoder()

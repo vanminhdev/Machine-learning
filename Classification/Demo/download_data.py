@@ -7,6 +7,6 @@ url = "http://kdd.ics.uci.edu/databases/kddcup99/kddcup.data_10_percent.gz"
 data = pd.read_csv(url, header=None)
 
 # Lưu dữ liệu vào file CSV
-data.to_csv("path_to_kddcup99_data.csv", index=False)
+data.to_csv("kddcup99_data.csv", index=False)
 
 print("Data saved successfully.")
