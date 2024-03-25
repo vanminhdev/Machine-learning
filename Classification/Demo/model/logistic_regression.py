@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -5,8 +6,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# Đọc dữ liệu từ file CSV (đảm bảo thay đường dẫn đúng vào 'path_to_data')
-path_to_data = "kddcup99_data.csv"
+# Đọc dữ liệu từ file CSV
+path_to_data = os.getcwd() + "/data/kddcup99_data.csv"
 data = pd.read_csv(path_to_data)
 
 # Xem thông tin cơ bản của dữ liệu
