@@ -5,7 +5,6 @@ from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
 import os
 
-# Hàm để xử lý dữ liệu từ file CSV
 def process_data(file_path, label):
     print(f"Đang xử lý file: {file_path}")  
     # Đọc dữ liệu từ file CSV
@@ -31,7 +30,7 @@ def process_data(file_path, label):
     start_time = df['frame.time_epoch'].iloc[0]
     df['frame.time_epoch'] = df['frame.time_epoch'] * 1000 #giá trị nhỏ quá nhân lên 1000 lần
     
-    # Biến lưu trữ gói tin trong một cửa sổ
+    # Danh sách lưu trữ các gói tin trong cửa sổ
     window_packets = []
 
     for index, row in df.iterrows():
