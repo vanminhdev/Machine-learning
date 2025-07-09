@@ -1,9 +1,11 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def process_data(file_path, label):
     print(f"Đang xử lý file: {file_path}")  
@@ -102,3 +104,25 @@ else:
     # Đánh giá mô hình
     print("Classification Report:\n", classification_report(y_test, y_pred))
     print("Accuracy:", accuracy_score(y_test, y_pred))
+    
+    # Tạo và hiển thị ma trận nhầm lẫn
+    cm = confusion_matrix(y_test, y_pred)
+    
+    # Hiển thị ma trận nhầm lẫn dưới dạng text
+    print("\nConfusion Matrix:")
+    print(cm)
+    
+    # Tạo biểu đồ ma trận nhầm lẫn
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=np.unique(y), yticklabels=np.unique(y))
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.tight_layout()
+    plt.show()
+    
+    # Hiển thị thông tin chi tiết về các lớp
+    class_names = np.unique(y)
+    print(f"\nSố lượng lớp: {len(class_names)}")
+    print(f"Tên các lớp: {class_names}")
