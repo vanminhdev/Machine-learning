@@ -6,6 +6,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import time
 
 def process_data(file_path, label):
     print(f"Đang xử lý file: {file_path}")  
@@ -95,13 +96,22 @@ else:
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Xây dựng mô hình phân loại
-    model = RandomForestClassifier(random_state=42)
+    print("Đang huấn luyện mô hình Random Forest với 100 cây...")
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
 
-    # Dự đoán trên tập kiểm tra
+    # Đo thời gian suy luận dự đoán
+    print("Bắt đầu đo thời gian suy luận...")
+    start_inference_time = time.perf_counter()
     y_pred = model.predict(X_test)
+    end_inference_time = time.perf_counter()
+    
+    inference_time_ms = (end_inference_time - start_inference_time) * 1000
+    print(f"⏱️  THỜI GIAN SUY LUẬN RANDOM FOREST: {inference_time_ms:.2f} ms")
+    print(f"⏱️  Thời gian suy luận trung bình mỗi mẫu: {inference_time_ms/len(X_test):.4f} ms")
 
     # Đánh giá mô hình
+    print("\n=== KẾT QUẢ ĐÁNH GIÁ MÔ HÌNH RANDOM FOREST ===")
     print("Classification Report:\n", classification_report(y_test, y_pred))
     print("Accuracy:", accuracy_score(y_test, y_pred))
     
@@ -116,7 +126,7 @@ else:
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
                 xticklabels=np.unique(y), yticklabels=np.unique(y))
-    plt.title('Confusion Matrix')
+    plt.title('Confusion Matrix - Random Forest')
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.tight_layout()
@@ -126,3 +136,4 @@ else:
     class_names = np.unique(y)
     print(f"\nSố lượng lớp: {len(class_names)}")
     print(f"Tên các lớp: {class_names}")
+    print(f"Số lượng mẫu test: {len(X_test)}")

@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import numpy as np
 import os
@@ -95,23 +96,29 @@ else:
     # Chia dữ liệu thành train và test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Xây dựng mô hình KNN với k=5
-    print("Đang huấn luyện mô hình KNN với k=5...")
-    model = KNeighborsClassifier(n_neighbors=5)
-    model.fit(X_train, y_train)
+    # Chuẩn hóa dữ liệu (rất quan trọng cho SVM)
+    print("Đang chuẩn hóa dữ liệu...")
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    # Xây dựng mô hình SVM với kernel RBF
+    print("Đang huấn luyện mô hình SVM với kernel RBF...")
+    model = SVC(kernel='rbf', random_state=42)
+    model.fit(X_train_scaled, y_train)
 
     # Đo thời gian suy luận dự đoán
     print("Bắt đầu đo thời gian suy luận...")
     start_inference_time = time.perf_counter()
-    y_pred = model.predict(X_test)
+    y_pred = model.predict(X_test_scaled)
     end_inference_time = time.perf_counter()
     
     inference_time_ms = (end_inference_time - start_inference_time) * 1000
-    print(f"⏱️  THỜI GIAN SUY LUẬN KNN (k=5): {inference_time_ms:.2f} ms")
+    print(f"⏱️  THỜI GIAN SUY LUẬN SVM (kernel RBF): {inference_time_ms:.2f} ms")
     print(f"⏱️  Thời gian suy luận trung bình mỗi mẫu: {inference_time_ms/len(X_test):.4f} ms")
 
     # Đánh giá mô hình
-    print("\n=== KẾT QUẢ ĐÁNH GIÁ MÔ HÌNH KNN ===")
+    print("\n=== KẾT QUẢ ĐÁNH GIÁ MÔ HÌNH SVM ===")
     print("Classification Report:\n", classification_report(y_test, y_pred))
     print("Accuracy:", accuracy_score(y_test, y_pred))
     
@@ -126,7 +133,7 @@ else:
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
                 xticklabels=np.unique(y), yticklabels=np.unique(y))
-    plt.title('Confusion Matrix - KNN (k=5)')
+    plt.title('Confusion Matrix - SVM (RBF kernel)')
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.tight_layout()
@@ -137,3 +144,7 @@ else:
     print(f"\nSố lượng lớp: {len(class_names)}")
     print(f"Tên các lớp: {class_names}")
     print(f"Số lượng mẫu test: {len(X_test)}")
+    
+    # Hiển thị thông tin về support vectors
+    print(f"Số lượng support vectors: {model.n_support_}")
+    print(f"Tổng số support vectors: {model.support_vectors_.shape[0]}")
